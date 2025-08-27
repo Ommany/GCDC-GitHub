@@ -5,25 +5,14 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build-and-preview:
+  preview:
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
       pull-requests: write
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-
-      - name: Flutter build (web)
-        working-directory: apps/console-flutter
-        run: |
-          flutter pub get
-          flutter build web --release
-
       - name: Deploy Preview
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
