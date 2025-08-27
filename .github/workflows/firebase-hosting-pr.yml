@@ -5,19 +5,29 @@ on:
     branches: [ "main" ]
 
 jobs:
-  preview:
-    runs-on: ubuntu-latest
+  build-and-preview:
     permissions:
       contents: read
+      id-token: write
       pull-requests: write
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Flutter build (web)
+        working-directory: apps/console-flutter
+        run: |
+          flutter pub get
+          flutter build web --release
+
       - name: Deploy Preview
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GCDC_468918 }}
           projectId: gcdc-468918
-          channelId: pr-${{ github.event.number }}
           expires: 7d
-
