@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "apps/console-flutter/build/web",
+    "public": "public",
     "ignore": ["**/.*", "**/node_modules/**"],
     "cleanUrls": true,
     "trailingSlash": false,
