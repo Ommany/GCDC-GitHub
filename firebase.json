@@ -1,8 +1,12 @@
 {
   "hosting": {
-    "public": "public",
+    "public": "apps/console-flutter/build/web",
     "ignore": ["**/.*", "**/node_modules/**"],
     "cleanUrls": true,
-    "trailingSlash": false
+    "trailingSlash": false,
+    "rewrites": [
+      { "source": "/api/**", "run": { "serviceId": "console-api", "region": "me-central1" } },
+      { "source": "**", "destination": "/index.html" }
+    ]
   }
 }
