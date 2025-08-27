@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "gcdc-468918",
+    "prod": "gcdc-468918"
+  }
+}
