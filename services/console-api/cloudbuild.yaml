@@ -3,25 +3,35 @@ substitutions:
   _REGION: "me-central1"
   _SERVICE: "console-api"
   _REPO: "apps"
-  _IMAGE: "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_SERVICE}:${SHORT_SHA}"
 
 steps:
+  # Build image from the API folder (Dockerfile بجانب هذا الملف)
   - name: gcr.io/cloud-builders/docker
-    args: [ "build", "-t", "${_IMAGE}", "." ]  # هذا الملف في نفس مجلد Dockerfile
+    args:
+      - "build"
+      - "-t"
+      - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_SERVICE}:${SHORT_SHA}"
+      - "."
 
+  # Push image to Artifact Registry
   - name: gcr.io/cloud-builders/docker
-    args: [ "push", "${_IMAGE}" ]
+    args:
+      - "push"
+      - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_SERVICE}:${SHORT_SHA}"
 
+  # Deploy to Cloud Run
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk
     entrypoint: gcloud
     args:
       - run
       - deploy
       - ${_SERVICE}
-      - --image=${_IMAGE}
-      - --region=${_REGION}
-      - --platform=managed
-      - --allow-unauthenticated
+      - "--image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_SERVICE}:${SHORT_SHA}"
+      - "--region=${_REGION}"
+      - "--platform=managed"
+      - "--allow-unauthenticated"
+      # أسرار لاحقًا عبر Secret Manager:
+      # - "--update-secrets=API_KEY=api-key:latest"
 
 images:
-  - ${_IMAGE}
+  - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_SERVICE}:${SHORT_SHA}"
