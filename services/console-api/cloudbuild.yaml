@@ -1,3 +1,4 @@
+# services/console-api/cloudbuild.yaml
 substitutions:
   _REGION: "me-central1"
   _SERVICE: "console-api"
@@ -6,9 +7,11 @@ substitutions:
 
 steps:
   - name: gcr.io/cloud-builders/docker
-    args: ["build", "-t", "${_IMAGE}", "."]
+    args: [ "build", "-t", "${_IMAGE}", "." ]
+
   - name: gcr.io/cloud-builders/docker
-    args: ["push", "${_IMAGE}"]
+    args: [ "push", "${_IMAGE}" ]
+
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk
     entrypoint: gcloud
     args:
@@ -19,6 +22,8 @@ steps:
       - --region=${_REGION}
       - --platform=managed
       - --allow-unauthenticated
+      # مثال تمرير أسرار لاحقًا:
+      # - --update-secrets=API_KEY=api-key:latest
 
 images:
   - ${_IMAGE}
