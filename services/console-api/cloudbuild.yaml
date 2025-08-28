@@ -3,11 +3,11 @@ substitutions:
   _REGION: "me-central1"
   _SERVICE: "console-api"
   _REPO: "apps"
-  _IMAGE: "$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/$_SERVICE:${SHORT_SHA}"
+  _IMAGE: "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_SERVICE}:${SHORT_SHA}"
 
 steps:
   - name: gcr.io/cloud-builders/docker
-    args: [ "build", "-t", "${_IMAGE}", "." ]
+    args: [ "build", "-t", "${_IMAGE}", "." ]  # هذا الملف في نفس مجلد Dockerfile
 
   - name: gcr.io/cloud-builders/docker
     args: [ "push", "${_IMAGE}" ]
@@ -22,8 +22,6 @@ steps:
       - --region=${_REGION}
       - --platform=managed
       - --allow-unauthenticated
-      # مثال تمرير أسرار لاحقًا:
-      # - --update-secrets=API_KEY=api-key:latest
 
 images:
   - ${_IMAGE}
